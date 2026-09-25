@@ -17,20 +17,21 @@ jobs:
       - name: Extract Mobile Paradise project
         run: |
           unzip -o Mobile_Paradise_App_Final_Source.zip -d mobile_paradise_source
-          echo "Extracted files:"
-          find mobile_paradise_source -maxdepth 3 -type f | head -50
 
       - name: Find Flutter project
         run: |
           PROJECT_DIR=$(dirname "$(find mobile_paradise_source -name pubspec.yaml -print -quit)")
           echo "PROJECT_DIR=$PROJECT_DIR" >> $GITHUB_ENV
-          echo "Flutter project found at: $PROJECT_DIR"
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
           channel: stable
           cache: true
+
+      - name: Create Android project files
+        working-directory: ${{ env.PROJECT_DIR }}
+        run: flutter create --platforms=android .
 
       - name: Get packages
         working-directory: ${{ env.PROJECT_DIR }}
